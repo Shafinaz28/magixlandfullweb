@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Properties | Magixland</title>
+    <meta name="description" content="Browse our latest available inventories—handpicked real estate projects and apartments from Magixland." />
+    <meta name="keywords" content="Magixland properties, real estate, plots, apartments, inventories, Bangalore">
+    <link rel="shortcut icon" href="images/magixland logo.jpg">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome (for menu icons) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <!-- Tailwind Configuration for Custom Colors -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'cream': '#E8DCC0',
+                        'cream-dark': '#D4C4A0',
+                        'brown': '#5A4A3A',
+                        'brown-light': '#7A6A5A',
+                        'brown-medium': '#8B7355',
+                        'brown-dark': '#6B5742',
+                        'cream-light': '#F5F1E8'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Global CSS Variables and Custom Styles -->
+    <style>
+        /* Custom Container width used in the new header structure */
+        .container {
+            width: 90% !important;
+            max-width: 1280px !important;
+        }
+
+        :root {
+    /* Consistent color definitions used in the HTML/JS */
+    --ml-beige: #e9dcc6;
+    --ml-brown: #8a6b4a;
+    --ml-dark: #6b4f37;  /* Darker brown for text/accents */
+    --ml-blue: #6b4f37;
+}
+
+
+        body{ 
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; 
+            background:#fff; 
+            color: #2b2b2b; 
+        }
+
+        /* --- Hero Styling --- */
+        .hero {
+            /* Removed background-image URL as requested */
+            background-color: var(--ml-beige); /* Solid background color */
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            min-height: 360px;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+        }
+        .hero::after{
+            content:"";
+            position:absolute; inset:0;
+            /* Using a translucent overlay still ensures white text is readable */
+            background: rgba(138,107,74,0.3); 
+        }
+        .hero-inner{ position:relative; z-index:1; max-width:1000px; text-align:center; color:#fff; padding:48px 20px; }
+
+        .btn-primary{ background: var(--ml-brown); color: #fff; }
+        .btn-primary:hover{ background: var(--ml-dark); }
+        
+        /* --- UPDATED: Secondary Button Styling (Transparent Background) --- */
+        .btn-secondary{ 
+            background: transparent; /* Changed to transparent as requested */
+            color: #fff; /* Keep white text for contrast against the dark overlay */
+            border: 2px solid #fff; /* White border for definition against the overlay */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: all 0.2s ease;
+        }
+        .btn-secondary:hover{ 
+            background: rgba(255, 255, 255, 0.1); /* Subtle white hover overlay */
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15); 
+        }
+
+        /* --- Property Card Styling (with smooth hover) --- */
+        .card {
+            border-radius: 12px;
+            background: #fff;
+            box-shadow: 0 6px 18px rgba(41,41,41,0.06);
+            overflow: hidden;
+            display:flex;
+            flex-direction:column;
+            transition: transform 0.3s ease, box-shadow 0.3s ease; 
+        }
+        
+        .card:hover {
+            transform: translateY(-5px); 
+            box-shadow: 0 10px 25px rgba(41,41,41,0.15); 
+        }
+        
+        .card-media {
+            min-height:150px;
+            background:#f3f2f1;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            color:#9b9b9b;
+            font-weight:600;
+        }
+        .badge-available { background:#16a34a; color:#fff; padding:6px 10px; border-radius:999px; font-weight:600; font-size:12px; }
+        .badge-sold { background:#ef4444; color:#fff; padding:6px 10px; border-radius:999px; font-weight:600; font-size:12px; }
+
+        /* Contact Button Styling and Smooth Transition */
+        .btn-contact {
+            background: var(--ml-brown);
+            color: #fff;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+        }
+        .btn-contact:hover {
+            background: var(--ml-dark); 
+        }
+        .btn-contact:active {
+            transform: scale(0.98); 
+        }
+        
+        /* --- Pagination Styles --- */
+        .compact-pagination-bar {
+            background: #fff;
+            padding: 8px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .compact-page-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #4b5563;
+            transition: all 0.2s;
+            cursor: pointer;
+            background: transparent;
+            border: none;
+        }
+        .compact-page-btn:hover:not(.active):not(:disabled) { background-color: #f3f4f6; }
+        .compact-page-btn.active { background-color: var(--ml-blue); color: #fff; font-weight: 600; }
+        .compact-page-btn:disabled { color: #d1d5db; cursor: not-allowed; background-color: #f7f7f7; }
+        .compact-ellipsis { padding: 0 4px; font-size: 14px; color: #9ca3af; }
+
+        /* small responsive tweaks */
+        @media (max-width:640px){
+            .hero-inner{ padding:30px 14px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NEW HEADER - Sticky, using custom colors from tailwind.config -->
+    <header class="bg-cream border-b border-cream-dark sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center">
+                <!-- Placeholder for logo image -->
+                <img src="images/magixland logo.jpg" alt="MagiXland Logo" class="w-auto h-14 object-contain">
+            </div>
+
+            <nav class="hidden md:flex space-x-8">
+                <a href="index.html" class="text-brown hover:text-brown-medium transition-colors">Home</a>
+                <a href="about.html" class="text-brown hover:text-brown-medium transition-colors">About</a>
+                <a href="projects.html" class="text-brown hover:text-brown-medium transition-colors">Projects</a>
+                <!-- UPDATED: Properties link moved after Projects -->
+                <a href="properties.html" class="text-brown-medium font-semibold">Properties</a> 
+                <a href="blogs" class="text-brown hover:text-brown-medium transition-colors">Blogs</a>
+                <a href="careers.html" class="text-brown hover:text-brown-medium transition-colors">Careers</a>
+            </nav>
+
+            <a href="contact.html"
+                class="hidden md:block bg-brown-medium hover:bg-brown-dark text-white px-4 py-2 rounded transition-colors">
+                Contact Us
+            </a>
+
+            <button id="mobile-menu-btn" class="md:hidden text-brown focus:outline-none">
+                <i id="menu-icon" class="fas fa-bars text-xl"></i>
+            </button>
+        </div>
+
+        <div id="mobile-menu" class="md:hidden bg-cream border-t border-cream-dark hidden">
+            <nav class="container mx-auto px-4 py-4 space-y-4">
+                <a href="index.html" class="block text-brown hover:text-brown-medium transition-colors py-2">Home</a>
+                <a href="about.html" class="block text-brown hover:text-brown-medium transition-colors py-2">About</a>
+                <a href="projects.html" class="block text-brown hover:text-brown-medium transition-colors py-2">Projects</a>
+                <!-- UPDATED: Properties link moved after Projects in mobile menu -->
+                <a href="properties.html" class="block text-brown-medium font-semibold py-2">Properties</a>
+                <a href="blogs" class="block text-brown hover:text-brown-medium transition-colors py-2">Blogs</a>
+                <a href="careers.html" class="block text-brown hover:text-brown-medium transition-colors py-2">Careers</a>
+                <a href="contact.html"
+                    class="block bg-brown-medium hover:bg-brown-dark text-white px-4 py-2 rounded transition-colors text-center mt-4">
+                    Contact Us
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero -->
+    <section class="hero pt-16 bg-brown-medium text-white">
+    <div class="hero-inner text-center">
+        <h1 class="text-4xl md:text-5xl font-extrabold leading-tight">
+            Discover Properties at Magixland
+        </h1>
+
+        <p class="mt-4 text-lg md:text-xl max-w-2xl mx-auto">
+            Browse our latest available inventories — handpicked projects and apartments with full details.
+        </p>
+
+       <div class="mt-6 flex items-center justify-center gap-4">
+
+    <!-- Primary Button (White) -->
+    <a class="px-6 py-3 rounded-md font-semibold bg-white text-brown-medium 
+               hover:bg-white/90 transition"
+       href="#properties-grid">
+        View Properties
+    </a>
+
+    <!-- Secondary Button (Outline White) -->
+    <a class="px-6 py-3 rounded-md font-semibold text-white border border-white 
+               hover:bg-white/10 transition"
+       href="./projects.html">
+        Our Projects
+    </a>
+
+</div>
+
+    </div>
+</section>
+
+
+    <!-- Main content -->
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-10 pb-20">
+
+        <!-- Filters row -->
+        <section class="mt-8 mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div>
+                <h2 id="properties-grid" class="text-2xl font-bold" style="color:var(--ml-dark)">Available Properties</h2>
+                <p class="text-sm text-gray-600">Showing properties from the Magixland inventories feed</p>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <input id="searchInput" type="search" placeholder="Search by title, code or type"
+                        class="px-3 py-2 border rounded-md w-56" />
+                <select id="typeFilter" class="px-3 py-2 border rounded-md">
+                    <option value="">All Types</option>
+                </select>
+                <button id="clearBtn" class="px-3 py-2 border rounded-md text-sm" title="Clear filters">Clear</button>
+            </div>
+        </section>
+
+        <!-- Grid -->
+        <section>
+            <div id="grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Cards inserted by JS -->
+            </div>
+
+            <!-- Loading/No results messages -->
+            <p id="loading" class="text-center text-gray-500 mt-8">Loading properties...</p>
+            <p id="noResults" class="text-center text-gray-500 mt-8 hidden">No properties found.</p>
+        </section>
+
+        <!-- Pagination Controls -->
+        <section class="mt-10 flex justify-center">
+            <div id="pagination" class="compact-pagination-bar">
+                <!-- Pagination buttons inserted by JS -->
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer (using custom colors) -->
+        <footer class="bg-cream pt-16">
+        <div class="container mx-auto px-4">
+            <div class="grid md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <div class="flex items-center">
+                        <img src="images/magixland logo.jpg" alt="MagiXland Logo" class="w-auto h-14 object-contain">
+                    </div>
+
+                    <p class="text-brown-light mb-4">
+                        Your trusted partner in finding the perfect property. Making dreams come true, one home at a
+                        time.
+                    </p>
+                    <div class="footertwo-social-icons">
+                        <a href="https://www.facebook.com/profile.php?id=61573123918284" aria-label="Facebook"><i
+                                class="fab fa-facebook-f mr-2"></i></a>
+                        <a href="https://in.pinterest.com/magixland/" aria-label="pinterest"><i
+                                class="fab fa-pinterest mr-2"></i></a>
+                        <a href="https://www.instagram.com/magix.land/" aria-label="Instagram"><i
+                                class="fab fa-instagram mr-2"></i></a>
+                        <a href="https://www.youtube.com/@MagixLand" aria-label="Youtube"><i
+                                class="fab fa-youtube mr-2"></i></a>
+                        <a href="https://in.linkedin.com/in/magix-land-b4b5b7350" aria-label="linkedin"><i
+                                class="fab fa-linkedin mr-2"></i></a>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="font-semibold text-brown mb-4">Quick Links</h3>
+                    <ul class="space-y-2 text-brown-light">
+                        <li><a href="index.html" class="hover:text-brown-medium transition-colors">Home</a></li>
+                        <li><a href="about.html" class="hover:text-brown-medium transition-colors">About</a></li>
+                        <li><a href="projects.html" class="hover:text-brown-medium transition-colors">Projects</a></li>
+                                                <li><a href="properties.html" class="hover:text-brown-medium transition-colors">Properties</a></li>
+
+                        <li><a href="contact.html" class="hover:text-brown-medium transition-colors">Contact</a></li>
+                        
+                        <li><a href="careers.html" class="hover:text-brown-medium transition-colors">Careers</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="font-semibold text-brown mb-4">Services</h3>
+                    <ul class="space-y-2 text-brown-light">
+                        <li>Property Buying</li>
+                        <li>Property Selling</li>
+                        <li>Property Rental</li>
+                        <li>Investment Consulting</li>
+                        <li>Property Management</li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="font-semibold text-brown mb-4">Contact Us</h3>
+                    <div class="space-y-3 text-brown-light">
+                        <div class="flex items-center space-x-2">
+                            <i class="fas fa-phone w-4 h-4"></i>
+                            <a href="tel:+918884858399" class="hover:underline">+91 8884858399</a>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <i class="fas fa-phone w-4 h-4"></i>
+                            <a href="tel:+917996355033" class="hover:underline">+91 7996355033</a>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <i class="fas fa-envelope w-4 h-4"></i>
+                            <a href="mailto:info@magixland.in" class="hover:underline">info@magixland.in</a>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <i class="fas fa-map-marker-alt w-4 h-4"></i>
+                            <a href="https://maps.google.com/?q=Bangalore, Karnataka" target="_blank"
+                                class="hover:underline">
+                                Bangalore, Karnataka
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="border-t border-cream-dark py-8 text-center text-brown-light">
+                <p>© 2024 MagiXland. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Main JavaScript Logic -->
+    <script>
+        // --- Mobile Menu Toggle Logic ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const menuIcon = document.getElementById('menu-icon');
+
+            if (mobileMenuBtn && mobileMenu) {
+                mobileMenuBtn.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('hidden');
+                    if (mobileMenu.classList.contains('hidden')) {
+                        // If menu is hidden, show bars
+                        menuIcon.classList.remove('fa-times');
+                        menuIcon.classList.add('fa-bars');
+                    } else {
+                        // If menu is shown, show 'x'
+                        menuIcon.classList.remove('fa-bars');
+                        menuIcon.classList.add('fa-times');
+                    }
+                });
+            }
+        });
+
+        // --- Property Loading and Pagination Logic ---
+        const API = "https://ml-inventories.netlify.app/properties";
+        const grid = document.getElementById('grid');
+        const loading = document.getElementById('loading');
+        const noResults = document.getElementById('noResults');
+        const searchInput = document.getElementById('searchInput');
+        const typeFilter = document.getElementById('typeFilter');
+        const clearBtn = document.getElementById('clearBtn');
+        const paginationContainer = document.getElementById('pagination'); 
+
+        // Pagination settings
+        const PAGESIZE = 12; // 12 inventories per page
+        const MAX_PAGES_TO_SHOW = 5; 
+
+        let properties = [];     
+        let filteredProperties = []; 
+        let currentPage = 1;
+
+        let typesSet = new Set();
+
+        // Utility for number formatting
+        const money = n => {
+            if (n === undefined || n === null) return "N/A";
+            try { return '₹' + Number(n).toLocaleString('en-IN'); } catch(e){ return n; }
+        };
+
+        // FIXED: HTML escaping function to prevent XSS
+        function escapeHtml(str){
+            if (!str && str !== 0) return '';
+            return String(str)
+                .replaceAll('&','&amp;')
+                .replaceAll('<','&lt;')
+                .replaceAll('>','&gt;')
+                .replaceAll('"','&quot;')
+                .replaceAll("'",'&#39;');
+        }
+
+        // Create card HTML for one property object
+        function makeCard(p) {
+            // Placeholder image if no image URL is provided in the data
+            const imageUrl = (p.images && p.images.length > 0) 
+                ? p.images[0] 
+                : `https://placehold.co/400x160/f3f2f1/9b9b9b?text=Image+Not+Available`;
+            
+            const imageHtml = (p.images && p.images.length > 0)
+                ? `<img src="${imageUrl}" alt="${escapeHtml(p.title)}" class="w-full h-40 object-cover">`
+                : `<div class="card-media">No Image</div>`;
+
+            return `
+                <div class="card">
+                    ${imageHtml}
+                    <div class="p-4 flex-1 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-start justify-between gap-2">
+                                <h3 class="text-lg font-bold" style="color:var(--ml-dark)">${escapeHtml(p.title || p.property_code || 'Untitled')}</h3>
+                                <span class="${p.status === 'available' ? 'badge-available' : 'badge-sold'}">${escapeHtml(p.status || '')}</span>
+                            </div>
+
+                            <p class="text-sm text-gray-600 mt-2 whitespace-pre-line">${escapeHtml(p.description || '')}</p>
+
+                            <div class="mt-3 grid grid-cols-2 gap-2 text-sm text-gray-700">
+                                <div><strong>Type:</strong> ${escapeHtml(p.type || '-')}</div>
+                                <div><strong>Bedrooms:</strong> ${p.bedrooms ?? '-'}</div>
+                                <div><strong>Bathrooms:</strong> ${p.bathrooms ?? '-'}</div>
+                                <div><strong>Area:</strong> ${p.area ? p.area + ' sqft' : '-'}</div>
+                            </div>
+
+                            <p class="text-lg font-bold mt-4">${money(p.price)}</p>
+                            <p class="text-xs text-gray-500 mt-1"><strong>Code:</strong> ${escapeHtml(p.property_code || '-')}</p>
+                        </div>
+
+                        <div class="mt-4">
+                            <button class="w-full py-2 rounded-md font-semibold btn-contact" data-id="${p.id}">
+                                Contact Agent
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Render the current page's list
+        function render() {
+            const totalPages = Math.ceil(filteredProperties.length / PAGESIZE);
+            
+            const startIndex = (currentPage - 1) * PAGESIZE;
+            const endIndex = startIndex + PAGESIZE;
+
+            const listToDisplay = filteredProperties.slice(startIndex, endIndex);
+
+            grid.innerHTML = '';
+            
+            if (!listToDisplay.length && filteredProperties.length > 0) {
+                noResults.classList.add('hidden'); 
+            } else if (!listToDisplay.length) {
+                noResults.classList.remove('hidden');
+            } else {
+                noResults.classList.add('hidden');
+            }
+
+            const html = listToDisplay.map(makeCard).join('');
+            grid.innerHTML = html;
+
+            renderPagination(totalPages);
+
+            // Attach contact button handlers
+            document.querySelectorAll('.btn-contact').forEach(b => {
+                b.addEventListener('click', (e) => {
+                    const id = e.currentTarget.dataset.id;
+                    const p = properties.find(x => x.id === id);
+                    if (!p) return;
+                    // Example contact action: open mail with property info
+                    const subject = encodeURIComponent(`Inquiry: ${p.title || p.property_code}`);
+                    const body = encodeURIComponent(`Hello,\n\nI am interested in property ${p.title || p.property_code} (ID: ${p.id}). Please contact me.\n\nThanks.`);
+                    window.location.href = `mailto:support@magixland.in?subject=${subject}&body=${body}`;
+                });
+            });
+            
+            // NOTE: Scroll behavior is intentionally removed here per user request.
+        }
+
+        // Render pagination controls (Compact/Ellipsis style)
+        function renderPagination(totalPages) {
+            paginationContainer.innerHTML = '';
+            if (totalPages <= 1) return;
+
+            let paginationHtml = '';
+
+            // 1. Previous button
+            paginationHtml += `<button class="compact-page-btn" data-page="${currentPage > 1 ? currentPage - 1 : 1}" ${currentPage === 1 ? 'disabled' : ''}>&lt;</button>`;
+            
+            // 2. Page numbers and ellipsis logic
+            const pages = new Set();
+            pages.add(1);
+            pages.add(totalPages);
+
+            for (let i = Math.max(2, currentPage - Math.floor((MAX_PAGES_TO_SHOW - 3) / 2)); 
+                 i <= Math.min(totalPages - 1, currentPage + Math.floor((MAX_PAGES_TO_SHOW - 3) / 2)); 
+                 i++) {
+                pages.add(i);
+            }
+            
+            const sortedPages = Array.from(pages).sort((a, b) => a - b);
+            
+            let lastPage = 0;
+            for (let i = 0; i < sortedPages.length; i++) {
+                const pageNum = sortedPages[i];
+                
+                if (pageNum > lastPage + 1) {
+                    paginationHtml += `<span class="compact-ellipsis">...</span>`;
+                }
+
+                const activeClass = pageNum === currentPage ? 'active' : '';
+                paginationHtml += `<button class="compact-page-btn ${activeClass}" data-page="${pageNum}">${pageNum}</button>`;
+                lastPage = pageNum;
+            }
+
+            // 3. Next button
+            paginationHtml += `<button class="compact-page-btn" data-page="${currentPage < totalPages ? currentPage + 1 : totalPages}" ${currentPage === totalPages ? 'disabled' : ''}>&gt;</button>`;
+
+            paginationContainer.innerHTML = paginationHtml;
+
+            // Attach event listeners to page buttons
+            document.querySelectorAll('.compact-page-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const newPage = Number(e.currentTarget.dataset.page);
+                    if (newPage !== currentPage) {
+                        currentPage = newPage;
+                        render();
+                    }
+                });
+            });
+        }
+
+        // Apply filters: search + type
+        function applyFilters() {
+            const q = (searchInput.value || '').trim().toLowerCase();
+            const t = (typeFilter.value || '').trim().toLowerCase();
+
+            let result = properties.filter(p => {
+                let matchesQ = true;
+                if (q) {
+                    const hay = `${p.title||''} ${p.property_code||''} ${p.type||''} ${p.description||''}`.toLowerCase();
+                    matchesQ = hay.includes(q);
+                }
+                let matchesT = true;
+                if (t) matchesT = (p.type || '').toLowerCase() === t;
+                return matchesQ && matchesT;
+            });
+            
+            filteredProperties = result;
+            currentPage = 1; 
+
+            render();
+        }
+
+        // Populate type dropdown
+        function populateTypes() {
+            const types = Array.from(typesSet).sort();
+            typeFilter.innerHTML = '<option value="">All Types</option>' + types.map(tt => `<option value="${escapeHtml(tt)}">${escapeHtml(tt)}</option>`).join('');
+        }
+
+        // Fetch and init (Handles API failure gracefully)
+        async function init() {
+            try {
+                const res = await fetch(API);
+                if (!res.ok) throw new Error(`Network error: ${res.status}`);
+                const data = await res.json();
+
+                properties = Array.isArray(data) ? data : [];
+                properties.forEach(p => { if(p.type) typesSet.add(p.type); });
+                
+                filteredProperties = properties; 
+
+                populateTypes();
+
+                loading.style.display = 'none';
+                render(); // Initial render
+
+            } catch (err) {
+                // Ensure the loading message is hidden and an error is shown
+                loading.style.display = 'none'; 
+                noResults.classList.remove('hidden');
+                noResults.innerText = 'Failed to load properties. Please check the API source or try again later.';
+                console.error("API Fetch Error:", err);
+            }
+        }
+
+        // events
+        searchInput.addEventListener('input', () => applyFilters());
+        typeFilter.addEventListener('change', () => applyFilters());
+        clearBtn.addEventListener('click', () => {
+            searchInput.value = '';
+            typeFilter.value = '';
+            applyFilters();
+        });
+
+        // init calls
+        const footerYear = document.getElementById('yr-footer');
+        if (footerYear) {
+            footerYear.innerText = new Date().getFullYear();
+        }
+        init();
+    </script>
+</body>
+</html>
