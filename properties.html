@@ -8,13 +8,13 @@
     <meta name="keywords" content="Magixland properties, real estate, plots, apartments, inventories, Bangalore">
     <link rel="shortcut icon" href="images/magixland logo.jpg">
     
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Font Awesome (for menu icons) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
-    <!-- Tailwind Configuration for Custom Colors -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
     <script>
         tailwind.config = {
             theme: {
@@ -33,7 +33,6 @@
         }
     </script>
 
-    <!-- Global CSS Variables and Custom Styles -->
     <style>
         /* Custom Container width used in the new header structure */
         .container {
@@ -42,12 +41,12 @@
         }
 
         :root {
-    /* Consistent color definitions used in the HTML/JS */
-    --ml-beige: #e9dcc6;
-    --ml-brown: #8a6b4a;
-    --ml-dark: #6b4f37;  /* Darker brown for text/accents */
-    --ml-blue: #6b4f37;
-}
+            /* Consistent color definitions used in the HTML/JS */
+            --ml-beige: #e9dcc6;
+            --ml-brown: #8a6b4a;
+            --ml-dark: #6b4f37;  /* Darker brown for text/accents */
+            --ml-blue: #6b4f37;
+        }
 
 
         body{ 
@@ -58,7 +57,6 @@
 
         /* --- Hero Styling --- */
         .hero {
-            /* Removed background-image URL as requested */
             background-color: var(--ml-beige); /* Solid background color */
             background-size: cover;
             background-position: center;
@@ -71,7 +69,6 @@
         .hero::after{
             content:"";
             position:absolute; inset:0;
-            /* Using a translucent overlay still ensures white text is readable */
             background: rgba(138,107,74,0.3); 
         }
         .hero-inner{ position:relative; z-index:1; max-width:1000px; text-align:center; color:#fff; padding:48px 20px; }
@@ -79,16 +76,16 @@
         .btn-primary{ background: var(--ml-brown); color: #fff; }
         .btn-primary:hover{ background: var(--ml-dark); }
         
-        /* --- UPDATED: Secondary Button Styling (Transparent Background) --- */
+        /* --- Secondary Button Styling (Transparent Background) --- */
         .btn-secondary{ 
-            background: transparent; /* Changed to transparent as requested */
-            color: #fff; /* Keep white text for contrast against the dark overlay */
-            border: 2px solid #fff; /* White border for definition against the overlay */
+            background: transparent; 
+            color: #fff; 
+            border: 2px solid #fff; 
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             transition: all 0.2s ease;
         }
         .btn-secondary:hover{ 
-            background: rgba(255, 255, 255, 0.1); /* Subtle white hover overlay */
+            background: rgba(255, 255, 255, 0.1); 
             box-shadow: 0 4px 8px rgba(0,0,0,0.15); 
         }
 
@@ -163,6 +160,40 @@
         .compact-page-btn:disabled { color: #d1d5db; cursor: not-allowed; background-color: #f7f7f7; }
         .compact-ellipsis { padding: 0 4px; font-size: 14px; color: #9ca3af; }
 
+        /* --- MODAL STYLES --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .modal-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-content {
+            background-color: #fff;
+            padding: 24px;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 440px;
+            position: relative;
+            transform: translateY(-20px);
+            transition: transform 0.3s ease;
+        }
+        .modal-overlay.open .modal-content {
+            transform: translateY(0);
+        }
         /* small responsive tweaks */
         @media (max-width:640px){
             .hero-inner{ padding:30px 14px; }
@@ -171,11 +202,9 @@
 </head>
 <body>
 
-    <!-- NEW HEADER - Sticky, using custom colors from tailwind.config -->
     <header class="bg-cream border-b border-cream-dark sticky top-0 z-50">
         <div class="container mx-auto px-4 py-4 flex justify-between items-center">
             <div class="flex items-center">
-                <!-- Placeholder for logo image -->
                 <img src="images/magixland logo.jpg" alt="MagiXland Logo" class="w-auto h-14 object-contain">
             </div>
 
@@ -183,7 +212,6 @@
                 <a href="index.html" class="text-brown hover:text-brown-medium transition-colors">Home</a>
                 <a href="about.html" class="text-brown hover:text-brown-medium transition-colors">About</a>
                 <a href="projects.html" class="text-brown hover:text-brown-medium transition-colors">Projects</a>
-                <!-- UPDATED: Properties link moved after Projects -->
                 <a href="properties.html" class="text-brown-medium font-semibold">Properties</a> 
                 <a href="blogs" class="text-brown hover:text-brown-medium transition-colors">Blogs</a>
                 <a href="careers.html" class="text-brown hover:text-brown-medium transition-colors">Careers</a>
@@ -204,7 +232,6 @@
                 <a href="index.html" class="block text-brown hover:text-brown-medium transition-colors py-2">Home</a>
                 <a href="about.html" class="block text-brown hover:text-brown-medium transition-colors py-2">About</a>
                 <a href="projects.html" class="block text-brown hover:text-brown-medium transition-colors py-2">Projects</a>
-                <!-- UPDATED: Properties link moved after Projects in mobile menu -->
                 <a href="properties.html" class="block text-brown-medium font-semibold py-2">Properties</a>
                 <a href="blogs" class="block text-brown hover:text-brown-medium transition-colors py-2">Blogs</a>
                 <a href="careers.html" class="block text-brown hover:text-brown-medium transition-colors py-2">Careers</a>
@@ -216,7 +243,6 @@
         </div>
     </header>
 
-    <!-- Hero -->
     <section class="hero pt-16 bg-brown-medium text-white">
     <div class="hero-inner text-center">
         <h1 class="text-4xl md:text-5xl font-extrabold leading-tight">
@@ -229,30 +255,26 @@
 
        <div class="mt-6 flex items-center justify-center gap-4">
 
-    <!-- Primary Button (White) -->
-    <a class="px-6 py-3 rounded-md font-semibold bg-white text-brown-medium 
-               hover:bg-white/90 transition"
-       href="#properties-grid">
-        View Properties
-    </a>
+            <a class="px-6 py-3 rounded-md font-semibold bg-white text-brown-medium 
+                        hover:bg-white/90 transition"
+                href="#properties-grid">
+                View Properties
+            </a>
 
-    <!-- Secondary Button (Outline White) -->
-    <a class="px-6 py-3 rounded-md font-semibold text-white border border-white 
-               hover:bg-white/10 transition"
-       href="./projects.html">
-        Our Projects
-    </a>
+            <a class="px-6 py-3 rounded-md font-semibold text-white border border-white 
+                        hover:bg-white/10 transition"
+                href="./projects.html">
+                Our Projects
+            </a>
 
-</div>
+        </div>
 
     </div>
 </section>
 
 
-    <!-- Main content -->
     <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-10 pb-20">
 
-        <!-- Filters row -->
         <section class="mt-8 mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
                 <h2 id="properties-grid" class="text-2xl font-bold" style="color:var(--ml-dark)">Available Properties</h2>
@@ -269,28 +291,22 @@
             </div>
         </section>
 
-        <!-- Grid -->
         <section>
             <div id="grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Cards inserted by JS -->
-            </div>
+                </div>
 
-            <!-- Loading/No results messages -->
             <p id="loading" class="text-center text-gray-500 mt-8">Loading properties...</p>
             <p id="noResults" class="text-center text-gray-500 mt-8 hidden">No properties found.</p>
         </section>
 
-        <!-- Pagination Controls -->
         <section class="mt-10 flex justify-center">
             <div id="pagination" class="compact-pagination-bar">
-                <!-- Pagination buttons inserted by JS -->
-            </div>
+                </div>
         </section>
 
     </main>
 
-    <!-- Footer (using custom colors) -->
-        <footer class="bg-cream pt-16">
+    <footer class="bg-cream pt-16">
         <div class="container mx-auto px-4">
             <div class="grid md:grid-cols-4 gap-8 mb-8">
                 <div>
@@ -322,7 +338,7 @@
                         <li><a href="index.html" class="hover:text-brown-medium transition-colors">Home</a></li>
                         <li><a href="about.html" class="hover:text-brown-medium transition-colors">About</a></li>
                         <li><a href="projects.html" class="hover:text-brown-medium transition-colors">Projects</a></li>
-                                                <li><a href="properties.html" class="hover:text-brown-medium transition-colors">Properties</a></li>
+                        <li><a href="properties.html" class="hover:text-brown-medium transition-colors">Properties</a></li>
 
                         <li><a href="contact.html" class="hover:text-brown-medium transition-colors">Contact</a></li>
                         
@@ -374,7 +390,62 @@
         </div>
     </footer>
 
-    <!-- Main JavaScript Logic -->
+    <div id="contactModal" class="modal-overlay">
+        <div class="modal-content">
+            <button id="closeModalBtn" class="absolute top-3 right-3 text-gray-500 hover:text-gray-800 transition">
+                <i class="fas fa-times"></i>
+            </button>
+            <h3 class="text-xl font-bold mb-4" style="color:var(--ml-dark)">Inquire About Property</h3>
+            <p class="text-sm text-gray-600 mb-4">Fill out the form to connect with an agent instantly.</p>
+            
+            <form id="contactForm">
+                <div class="mb-4">
+                    <label for="modalName" class="block text-sm font-medium text-gray-700">
+                        <i class="fas fa-user mr-2 text-brown-medium"></i> Full Name
+                    </label>
+                    <input type="text" id="modalName" name="name" required 
+                           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-brown-medium focus:border-brown-medium"
+                           placeholder="Enter your full name">
+                </div>
+                <div class="mb-4">
+                    <label for="modalEmail" class="block text-sm font-medium text-gray-700">
+                        <i class="fas fa-envelope mr-2 text-brown-medium"></i> Email Address
+                    </label>
+                    <input type="email" id="modalEmail" name="email" required 
+                           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-brown-medium focus:border-brown-medium"
+                           placeholder="Enter your email address">
+                </div>
+                <div class="mb-4">
+                    <label for="modalPhone" class="block text-sm font-medium text-gray-700">
+                        <i class="fas fa-phone mr-2 text-brown-medium"></i> Phone Number
+                    </label>
+                    <input type="tel" id="modalPhone" name="phone" required 
+                           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-brown-medium focus:border-brown-medium"
+                           placeholder="Enter your phone number">
+                </div>
+                <div class="mb-6">
+                    <label for="modalCode" class="block text-sm font-medium text-gray-700">
+                        <i class="fas fa-tag mr-2 text-brown-medium"></i> Property Code (Optional)
+                    </label>
+                    <input type="text" id="modalCode" name="propertyCode"
+                           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-brown-medium focus:border-brown-medium"
+                           placeholder="Enter property code">
+                </div>
+                
+                <button type="submit" 
+                        class="w-full py-2 rounded-md font-semibold btn-contact text-lg flex items-center justify-center gap-2">
+                    <i class="fas fa-paper-plane"></i> Submit
+                </button>
+            </form>
+            
+            <p id="submissionMessage" class="text-center mt-3 text-sm text-green-600 hidden">Inquiry sent successfully!</p>
+            <p id="errorMessage" class="text-center mt-3 text-sm text-red-600 hidden">Submission failed. Please try again.</p>
+
+             <div class="flex items-center justify-center mt-4 text-gray-500 text-sm">
+                <i class="fas fa-shield-alt mr-2"></i> Your information is secure with us
+            </div>
+        </div>
+    </div>
     <script>
         // --- Mobile Menu Toggle Logic ---
         document.addEventListener('DOMContentLoaded', () => {
@@ -386,11 +457,9 @@
                 mobileMenuBtn.addEventListener('click', () => {
                     mobileMenu.classList.toggle('hidden');
                     if (mobileMenu.classList.contains('hidden')) {
-                        // If menu is hidden, show bars
                         menuIcon.classList.remove('fa-times');
                         menuIcon.classList.add('fa-bars');
                     } else {
-                        // If menu is shown, show 'x'
                         menuIcon.classList.remove('fa-bars');
                         menuIcon.classList.add('fa-times');
                     }
@@ -398,8 +467,11 @@
             }
         });
 
-        // --- Property Loading and Pagination Logic ---
+        // --- Configuration & Elements ---
         const API = "https://ml-inventories.netlify.app/properties";
+        // 🛑 PLUGGED IN USER'S SPECIFIED SHEET URL 🛑
+        const SHEET_API_URL = "https://script.google.com/macros/s/AKfycbxbkDvGKHXS52G9i-FM4ubV-oXW5YiIEnQ5B4L8s_Z5TzWMCkKSVOPgkQe4nBwZhSJY-Q/exec"; 
+        
         const grid = document.getElementById('grid');
         const loading = document.getElementById('loading');
         const noResults = document.getElementById('noResults');
@@ -408,36 +480,193 @@
         const clearBtn = document.getElementById('clearBtn');
         const paginationContainer = document.getElementById('pagination'); 
 
+        // Modal Elements
+        const contactModal = document.getElementById('contactModal');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const contactForm = document.getElementById('contactForm');
+        const modalCodeInput = document.getElementById('modalCode');
+        const submissionMessage = document.getElementById('submissionMessage');
+        const errorMessage = document.getElementById('errorMessage');
+        const MODAL_PHONE_NUMBER = '+918884858399';
+
         // Pagination settings
-        const PAGESIZE = 12; // 12 inventories per page
+        const PAGESIZE = 12; 
         const MAX_PAGES_TO_SHOW = 5; 
 
-        let properties = [];     
+        let properties = []; 
         let filteredProperties = []; 
         let currentPage = 1;
-
         let typesSet = new Set();
+        let inactivityTimer;
 
-        // Utility for number formatting
+        // Utility functions
         const money = n => {
             if (n === undefined || n === null) return "N/A";
             try { return '₹' + Number(n).toLocaleString('en-IN'); } catch(e){ return n; }
         };
 
-        // FIXED: HTML escaping function to prevent XSS
         function escapeHtml(str){
             if (!str && str !== 0) return '';
             return String(str)
-                .replaceAll('&','&amp;')
-                .replaceAll('<','&lt;')
-                .replaceAll('>','&gt;')
-                .replaceAll('"','&quot;')
-                .replaceAll("'",'&#39;');
+                .replaceAll('&','&')
+                .replaceAll('<','<')
+                .replaceAll('>','>')
+                .replaceAll('"','"')
+                .replaceAll("'",'');
         }
+
+        // --- Modal Control Functions ---
+        function showModal(propertyCode = '') {
+            modalCodeInput.value = propertyCode === 'General Inquiry' ? '' : propertyCode;
+            submissionMessage.classList.add('hidden');
+            errorMessage.classList.add('hidden');
+            contactForm.style.display = 'block';
+            contactModal.classList.add('open');
+            resetInactivityTimer();
+        }
+
+        function hideModal() {
+            contactModal.classList.remove('open');
+            contactForm.reset();
+            startInactivityTimer();
+        }
+        
+        // --- Form Submission Handler: SAVES TO GOOGLE SHEET (REDIRECTS TO FILTERED PAGE) ---
+        contactForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // Hide native messages
+            submissionMessage.classList.add('hidden');
+            errorMessage.classList.add('hidden');
+
+            const form = e.target;
+            const formData = new FormData(form);
+            const data = {};
+            formData.forEach((value, key) => (data[key] = value));
+
+            // Capture the property code to use for redirection/filtering
+            const submittedCode = data.propertyCode ? data.propertyCode.trim() : '';
+
+            const submitButton = form.querySelector('button[type="submit"]');
+            submitButton.disabled = true;
+            submitButton.innerText = 'Submitting...';
+
+            // 1. Add Timestamp (IST)
+            const now = new Date();
+            data["Timestamp"] = new Date(now.getTime() + 5.5 * 60 * 60 * 1000).toISOString().slice(0, 19).replace("T", " ");
+
+            // 🛑 Show SweetAlert Loading Spinner
+            Swal.fire({
+                title: 'Sending Request',
+                text: 'Processing your details...',
+                allowOutsideClick: false,
+                showConfirmButton: false,
+                willOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
+            try {
+                // 2. Send data to Google Sheet
+                const sheetResponse = await fetch(SHEET_API_URL, {
+                    method: 'POST',
+                    mode: 'cors', 
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams(data).toString()
+                });
+                
+                // Close the loading modal if the network call completes
+                Swal.close(); 
+
+                if (!sheetResponse.ok) {
+                    throw new Error(`HTTP Error: ${sheetResponse.status} ${sheetResponse.statusText}`);
+                }
+
+                const responseText = await sheetResponse.text();
+
+                if (responseText.includes("success")) {
+                    
+                    // 3. SUCCESS: Show SweetAlert Confirmation
+                    await Swal.fire({
+                        icon: 'success',
+                        title: 'Inquiry Saved!',
+                        text: 'Thank you! Redirecting you to the filtered property...',
+                        confirmButtonText: 'OK',
+                        customClass: {
+                            confirmButton: 'bg-brown hover:bg-brown-dark'
+                        }
+                    });
+
+                    // 4. REDIRECT WITH FILTER PARAMETER
+                    let redirectURL = './properties.html';
+                    if (submittedCode) {
+                        // If a code was provided, redirect with a query parameter
+                        redirectURL += `?code=${encodeURIComponent(submittedCode)}`;
+                    }
+                    
+                    window.location.href = redirectURL; 
+
+                } else {
+                    // 5. Script Error 
+                    throw new Error(`Script returned error: ${responseText}`);
+                }
+
+            } catch (error) {
+                // 6. Error handling
+                console.error('Submission Error:', error);
+                
+                Swal.close(); 
+                
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: `Submission failed. Please check the network and console.`,
+                    confirmButtonText: 'Try Again',
+                    customClass: {
+                        confirmButton: 'bg-brown-medium hover:bg-brown-dark'
+                    }
+                });
+                
+            } finally {
+                // Reset form controls
+                submitButton.disabled = false;
+                submitButton.innerText = 'Submit';
+                form.style.display = 'block';
+            }
+        });
+
+        closeModalBtn.addEventListener('click', hideModal);
+        
+        contactModal.addEventListener('click', (e) => {
+            if (e.target === contactModal) {
+                hideModal();
+            }
+        });
+
+        // --- Inactivity Timer (Popup) Logic (FIXED) ---
+        function startInactivityTimer() {
+            clearTimeout(inactivityTimer);
+            inactivityTimer = setTimeout(() => {
+                showModal('General Inquiry'); 
+            }, 20000); // 20 seconds
+        }
+
+        // FIX: Resets the timer completely on any user interaction.
+        function resetInactivityTimer() {
+            clearTimeout(inactivityTimer);
+            startInactivityTimer();
+        }
+        
+        // Reset timer on user interaction
+        ['mousemove', 'mousedown', 'scroll', 'keypress', 'touchstart'].forEach(event => {
+            document.addEventListener(event, resetInactivityTimer, true);
+        });
+
 
         // Create card HTML for one property object
         function makeCard(p) {
-            // Placeholder image if no image URL is provided in the data
             const imageUrl = (p.images && p.images.length > 0) 
                 ? p.images[0] 
                 : `https://placehold.co/400x160/f3f2f1/9b9b9b?text=Image+Not+Available`;
@@ -466,20 +695,74 @@
                             </div>
 
                             <p class="text-lg font-bold mt-4">${money(p.price)}</p>
-                            <p class="text-xs text-gray-500 mt-1"><strong>Code:</strong> ${escapeHtml(p.property_code || '-')}</p>
+                            <p class="text-sm font-semibold mt-1 p-2 bg-cream-light border border-cream rounded inline-block">
+                                <i class="fas fa-tag mr-1 text-brown-medium"></i> Code: ${escapeHtml(p.property_code || '-')}
+                            </p>
                         </div>
 
                         <div class="mt-4">
-                            <button class="w-full py-2 rounded-md font-semibold btn-contact" data-id="${p.id}">
-                                Contact Agent
-                            </button>
+                            <a href="tel:${MODAL_PHONE_NUMBER}" class="w-full py-2 rounded-md font-semibold btn-contact text-center block">
+                                <i class="fas fa-phone mr-2"></i> Contact Agent Directly
+                            </a>
                         </div>
                     </div>
                 </div>
             `;
         }
 
-        // Render the current page's list
+        // --- Initialization (MODIFIED TO READ URL PARAMETER) ---
+        async function init() {
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 8000); 
+
+                const res = await fetch(API, { signal: controller.signal });
+                clearTimeout(timeoutId);
+
+                if (!res.ok) throw new Error(`Network error: ${res.status}`);
+                const data = await res.json();
+
+                properties = Array.isArray(data) ? data : [];
+                properties.forEach(p => { if(p.type) typesSet.add(p.type); });
+                
+                filteredProperties = properties; 
+
+                populateTypes();
+
+                loading.style.display = 'none';
+                
+                // 🌟 NEW: Check URL for pre-filter code
+                const urlParams = new URLSearchParams(window.location.search);
+                const prefilterCode = urlParams.get('code');
+
+                if (prefilterCode) {
+                    // Set the search input value and automatically apply filters
+                    searchInput.value = prefilterCode;
+                    applyFilters(); 
+                    
+                    // Scroll to the properties grid immediately
+                    document.getElementById('properties-grid').scrollIntoView({ behavior: 'smooth' });
+                } else {
+                    // If no code, run standard render
+                    render();
+                }
+
+            } catch (err) {
+                loading.style.display = 'none'; 
+                noResults.classList.remove('hidden');
+                
+                if (err.name === 'AbortError') {
+                    noResults.innerText = 'Failed to load properties: API request timed out (8 seconds).';
+                } else {
+                    noResults.innerText = 'Failed to load properties. Please check the API source or try again later.';
+                }
+                console.error("API Fetch Error:", err);
+            }
+            
+            startInactivityTimer();
+        }
+
+        // Render functions (render, renderPagination, applyFilters, populateTypes) are unchanged in logic
         function render() {
             const totalPages = Math.ceil(filteredProperties.length / PAGESIZE);
             
@@ -502,65 +785,36 @@
             grid.innerHTML = html;
 
             renderPagination(totalPages);
-
-            // Attach contact button handlers
-            document.querySelectorAll('.btn-contact').forEach(b => {
-                b.addEventListener('click', (e) => {
-                    const id = e.currentTarget.dataset.id;
-                    const p = properties.find(x => x.id === id);
-                    if (!p) return;
-                    // Example contact action: open mail with property info
-                    const subject = encodeURIComponent(`Inquiry: ${p.title || p.property_code}`);
-                    const body = encodeURIComponent(`Hello,\n\nI am interested in property ${p.title || p.property_code} (ID: ${p.id}). Please contact me.\n\nThanks.`);
-                    window.location.href = `mailto:support@magixland.in?subject=${subject}&body=${body}`;
-                });
-            });
-            
-            // NOTE: Scroll behavior is intentionally removed here per user request.
         }
 
-        // Render pagination controls (Compact/Ellipsis style)
         function renderPagination(totalPages) {
             paginationContainer.innerHTML = '';
             if (totalPages <= 1) return;
 
             let paginationHtml = '';
-
-            // 1. Previous button
-            paginationHtml += `<button class="compact-page-btn" data-page="${currentPage > 1 ? currentPage - 1 : 1}" ${currentPage === 1 ? 'disabled' : ''}>&lt;</button>`;
-            
-            // 2. Page numbers and ellipsis logic
+            paginationHtml += `<button class="compact-page-btn" data-page="${currentPage > 1 ? currentPage - 1 : 1}" ${currentPage === 1 ? 'disabled' : ''}><</button>`;
             const pages = new Set();
             pages.add(1);
             pages.add(totalPages);
-
             for (let i = Math.max(2, currentPage - Math.floor((MAX_PAGES_TO_SHOW - 3) / 2)); 
                  i <= Math.min(totalPages - 1, currentPage + Math.floor((MAX_PAGES_TO_SHOW - 3) / 2)); 
                  i++) {
                 pages.add(i);
             }
-            
             const sortedPages = Array.from(pages).sort((a, b) => a - b);
-            
             let lastPage = 0;
             for (let i = 0; i < sortedPages.length; i++) {
                 const pageNum = sortedPages[i];
-                
                 if (pageNum > lastPage + 1) {
                     paginationHtml += `<span class="compact-ellipsis">...</span>`;
                 }
-
                 const activeClass = pageNum === currentPage ? 'active' : '';
                 paginationHtml += `<button class="compact-page-btn ${activeClass}" data-page="${pageNum}">${pageNum}</button>`;
                 lastPage = pageNum;
             }
-
-            // 3. Next button
-            paginationHtml += `<button class="compact-page-btn" data-page="${currentPage < totalPages ? currentPage + 1 : totalPages}" ${currentPage === totalPages ? 'disabled' : ''}>&gt;</button>`;
-
+            paginationHtml += `<button class="compact-page-btn" data-page="${currentPage < totalPages ? currentPage + 1 : totalPages}" ${currentPage === totalPages ? 'disabled' : ''}>></button>`;
             paginationContainer.innerHTML = paginationHtml;
 
-            // Attach event listeners to page buttons
             document.querySelectorAll('.compact-page-btn').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     const newPage = Number(e.currentTarget.dataset.page);
@@ -572,11 +826,9 @@
             });
         }
 
-        // Apply filters: search + type
         function applyFilters() {
             const q = (searchInput.value || '').trim().toLowerCase();
             const t = (typeFilter.value || '').trim().toLowerCase();
-
             let result = properties.filter(p => {
                 let matchesQ = true;
                 if (q) {
@@ -587,45 +839,16 @@
                 if (t) matchesT = (p.type || '').toLowerCase() === t;
                 return matchesQ && matchesT;
             });
-            
             filteredProperties = result;
             currentPage = 1; 
-
             render();
         }
 
-        // Populate type dropdown
         function populateTypes() {
             const types = Array.from(typesSet).sort();
             typeFilter.innerHTML = '<option value="">All Types</option>' + types.map(tt => `<option value="${escapeHtml(tt)}">${escapeHtml(tt)}</option>`).join('');
         }
-
-        // Fetch and init (Handles API failure gracefully)
-        async function init() {
-            try {
-                const res = await fetch(API);
-                if (!res.ok) throw new Error(`Network error: ${res.status}`);
-                const data = await res.json();
-
-                properties = Array.isArray(data) ? data : [];
-                properties.forEach(p => { if(p.type) typesSet.add(p.type); });
-                
-                filteredProperties = properties; 
-
-                populateTypes();
-
-                loading.style.display = 'none';
-                render(); // Initial render
-
-            } catch (err) {
-                // Ensure the loading message is hidden and an error is shown
-                loading.style.display = 'none'; 
-                noResults.classList.remove('hidden');
-                noResults.innerText = 'Failed to load properties. Please check the API source or try again later.';
-                console.error("API Fetch Error:", err);
-            }
-        }
-
+        
         // events
         searchInput.addEventListener('input', () => applyFilters());
         typeFilter.addEventListener('change', () => applyFilters());
@@ -635,11 +858,6 @@
             applyFilters();
         });
 
-        // init calls
-        const footerYear = document.getElementById('yr-footer');
-        if (footerYear) {
-            footerYear.innerText = new Date().getFullYear();
-        }
         init();
     </script>
 </body>
