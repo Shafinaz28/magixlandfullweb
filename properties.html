@@ -203,14 +203,10 @@
                 width: 95%; /* Adjust modal size slightly for small screen fit */
                 padding: 20px;
             }
-            /* Reduce horizontal padding on the main content area */
+            /* Reduce horizontal padding on the main content area for a tighter fit */
             main {
                 padding-left: 0.5rem; 
                 padding-right: 0.5rem; 
-            }
-            /* Ensure filter container uses space efficiently */
-            .flex.items-center.gap-3 {
-                 /* Not needed anymore due to new inner div */
             }
         }
     </style>
@@ -288,20 +284,24 @@
 </section>
 
 
-    <main class="max-w-6xl mx-auto lg:px-8 mt-10 pb-20"> <section class="mt-8 mb-6 px-4 sm:px-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <main class="max-w-6xl mx-auto lg:px-8 mt-10 pb-20">
+
+        <section class="mt-8 mb-6 px-4 sm:px-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
                 <h2 id="properties-grid" class="text-2xl font-bold" style="color:var(--ml-dark)">Available Properties</h2>
-                <p class="text-sm text-gray-600">Showing properties from the Magixland inventories feed</p>
+                <!-- <p class="text-sm text-gray-600">Showing properties from the Magixland inventories feed</p> -->
             </div>
 
-            <div class="flex flex-col gap-3 w-full sm:w-auto"> 
-                <div class="flex gap-3 w-full"> 
+            <div class="flex flex-col sm:flex-row sm:items-center gap-3 w-full sm:w-auto"> 
+                <div class="flex gap-3 w-full sm:w-auto"> 
                     <input id="searchInput" type="search" placeholder="Search by title, code or type"
-                            class="px-3 py-2 border rounded-md w-1/2" /> <select id="typeFilter" class="px-3 py-2 border rounded-md w-1/2"> <option value="">All Types</option>
+                            class="px-3 py-2 border rounded-md w-1/2 sm:w-48" /> 
+                    <select id="typeFilter" class="px-3 py-2 border rounded-md w-1/2 sm:w-32"> 
+                        <option value="">All Types</option>
                     </select>
                 </div>
                 
-                <button id="clearBtn" class="px-3 py-2 border rounded-md text-sm w-full" title="Clear filters">Clear</button>
+                <button id="clearBtn" class="px-3 py-2 border rounded-md text-sm w-full sm:w-auto" title="Clear filters">Clear</button>
             </div>
         </section>
 
