@@ -71,6 +71,7 @@
             position:absolute; inset:0;
             background: rgba(138,107,74,0.3); 
         }
+        /* Adjusted hero-inner padding for maximum use of space */
         .hero-inner{ position:relative; z-index:1; max-width:1000px; text-align:center; color:#fff; padding:48px 20px; }
 
         .btn-primary{ background: var(--ml-brown); color: #fff; }
@@ -194,9 +195,23 @@
         .modal-overlay.open .modal-content {
             transform: translateY(0);
         }
-        /* small responsive tweaks */
-        @media (max-width:640px){
+        
+        /* Mobile Specific Fixes for Popup and Hero */
+        @media (max-width: 640px){
             .hero-inner{ padding:30px 14px; }
+            .modal-content {
+                width: 95%; /* Adjust modal size slightly for small screen fit */
+                padding: 20px;
+            }
+            /* Reduce horizontal padding on the main content area */
+            main {
+                padding-left: 0.5rem; 
+                padding-right: 0.5rem; 
+            }
+            /* Ensure filter container uses space efficiently */
+            .flex.items-center.gap-3 {
+                 /* Not needed anymore due to new inner div */
+            }
         }
     </style>
 </head>
@@ -273,25 +288,24 @@
 </section>
 
 
-    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-10 pb-20">
-
-        <section class="mt-8 mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <main class="max-w-6xl mx-auto lg:px-8 mt-10 pb-20"> <section class="mt-8 mb-6 px-4 sm:px-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
                 <h2 id="properties-grid" class="text-2xl font-bold" style="color:var(--ml-dark)">Available Properties</h2>
                 <p class="text-sm text-gray-600">Showing properties from the Magixland inventories feed</p>
             </div>
 
-            <div class="flex items-center gap-3">
-                <input id="searchInput" type="search" placeholder="Search by title, code or type"
-                        class="px-3 py-2 border rounded-md w-56" />
-                <select id="typeFilter" class="px-3 py-2 border rounded-md">
-                    <option value="">All Types</option>
-                </select>
-                <button id="clearBtn" class="px-3 py-2 border rounded-md text-sm" title="Clear filters">Clear</button>
+            <div class="flex flex-col gap-3 w-full sm:w-auto"> 
+                <div class="flex gap-3 w-full"> 
+                    <input id="searchInput" type="search" placeholder="Search by title, code or type"
+                            class="px-3 py-2 border rounded-md w-1/2" /> <select id="typeFilter" class="px-3 py-2 border rounded-md w-1/2"> <option value="">All Types</option>
+                    </select>
+                </div>
+                
+                <button id="clearBtn" class="px-3 py-2 border rounded-md text-sm w-full" title="Clear filters">Clear</button>
             </div>
         </section>
 
-        <section>
+        <section class="px-4 sm:px-6 lg:px-0">
             <div id="grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 </div>
 
@@ -441,7 +455,7 @@
             <p id="submissionMessage" class="text-center mt-3 text-sm text-green-600 hidden">Inquiry sent successfully!</p>
             <p id="errorMessage" class="text-center mt-3 text-sm text-red-600 hidden">Submission failed. Please try again.</p>
 
-             <div class="flex items-center justify-center mt-4 text-gray-500 text-sm">
+            <div class="flex items-center justify-center mt-4 text-gray-500 text-sm">
                 <i class="fas fa-shield-alt mr-2"></i> Your information is secure with us
             </div>
         </div>
