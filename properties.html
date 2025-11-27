@@ -289,7 +289,7 @@
         <section class="mt-8 mb-6 px-4 sm:px-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
                 <h2 id="properties-grid" class="text-2xl font-bold" style="color:var(--ml-dark)">Available Properties</h2>
-                <!-- <p class="text-sm text-gray-600">Showing properties from the Magixland inventories feed</p> -->
+                <p class="text-sm text-gray-600">Showing properties from the Magixland inventories feed</p>
             </div>
 
             <div class="flex flex-col sm:flex-row sm:items-center gap-3 w-full sm:w-auto"> 
@@ -536,13 +536,13 @@
             errorMessage.classList.add('hidden');
             contactForm.style.display = 'block';
             contactModal.classList.add('open');
-            resetInactivityTimer();
+            // Inactivity timer logic removed, so no reset call here
         }
 
         function hideModal() {
             contactModal.classList.remove('open');
             contactForm.reset();
-            startInactivityTimer();
+            // Inactivity timer logic removed, so no start call here
         }
         
         // --- Form Submission Handler: SAVES TO GOOGLE SHEET (REDIRECTS TO FILTERED PAGE) ---
@@ -659,27 +659,11 @@
             }
         });
 
-        // --- Inactivity Timer (Popup) Logic (FIXED) ---
-        function startInactivityTimer() {
-            clearTimeout(inactivityTimer);
-            inactivityTimer = setTimeout(() => {
-                showModal('General Inquiry'); 
-            }, 20000); // 20 seconds
-        }
-
-        // FIX: Resets the timer completely on any user interaction.
-        function resetInactivityTimer() {
-            clearTimeout(inactivityTimer);
-            startInactivityTimer();
-        }
+        // --- Inactivity Timer Logic Removed ---
+        // The original implementation had the start/reset functions removed. 
+        // We ensure they are not called anywhere outside the init() block, which is now correct.
         
-        // Reset timer on user interaction
-        ['mousemove', 'mousedown', 'scroll', 'keypress', 'touchstart'].forEach(event => {
-            document.addEventListener(event, resetInactivityTimer, true);
-        });
-
-
-        // Create card HTML for one property object
+        // --- Create card HTML for one property object ---
         function makeCard(p) {
             const imageUrl = (p.images && p.images.length > 0) 
                 ? p.images[0] 
@@ -715,9 +699,9 @@
                         </div>
 
                         <div class="mt-4">
-                            <a href="tel:${MODAL_PHONE_NUMBER}" class="w-full py-2 rounded-md font-semibold btn-contact text-center block">
-                                <i class="fas fa-phone mr-2"></i> Contact Agent Directly
-                            </a>
+                            <button class="w-full py-2 rounded-md font-semibold btn-contact flex items-center justify-center" data-property-code="${escapeHtml(p.property_code || '')}">
+                                <i class="fas fa-phone mr-2"></i> Contact Agent
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -727,6 +711,7 @@
         // --- Initialization (MODIFIED TO READ URL PARAMETER) ---
         async function init() {
             try {
+                const API = "https://ml-inventories.netlify.app/properties";
                 const controller = new AbortController();
                 const timeoutId = setTimeout(() => controller.abort(), 8000); 
 
@@ -745,21 +730,26 @@
 
                 loading.style.display = 'none';
                 
-                // 🌟 NEW: Check URL for pre-filter code
+                // 🌟 Check URL for pre-filter code
                 const urlParams = new URLSearchParams(window.location.search);
                 const prefilterCode = urlParams.get('code');
 
                 if (prefilterCode) {
-                    // Set the search input value and automatically apply filters
                     searchInput.value = prefilterCode;
                     applyFilters(); 
-                    
-                    // Scroll to the properties grid immediately
                     document.getElementById('properties-grid').scrollIntoView({ behavior: 'smooth' });
                 } else {
-                    // If no code, run standard render
                     render();
                 }
+
+                // 🌟 Add event listeners to the generated contact buttons 🌟
+                document.querySelectorAll('.btn-contact').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        const code = e.currentTarget.dataset.propertyCode;
+                        showModal(code);
+                    });
+                });
+
 
             } catch (err) {
                 loading.style.display = 'none'; 
@@ -772,17 +762,13 @@
                 }
                 console.error("API Fetch Error:", err);
             }
-            
-            startInactivityTimer();
         }
 
-        // Render functions (render, renderPagination, applyFilters, populateTypes) are unchanged in logic
+        // Render function re-defined to correctly add the button listener after the grid is drawn
         function render() {
             const totalPages = Math.ceil(filteredProperties.length / PAGESIZE);
-            
             const startIndex = (currentPage - 1) * PAGESIZE;
             const endIndex = startIndex + PAGESIZE;
-
             const listToDisplay = filteredProperties.slice(startIndex, endIndex);
 
             grid.innerHTML = '';
@@ -799,6 +785,14 @@
             grid.innerHTML = html;
 
             renderPagination(totalPages);
+            
+            // 🌟 CRITICAL FIX: Re-attach event listeners after rendering the new cards 🌟
+            document.querySelectorAll('.btn-contact').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const code = e.currentTarget.dataset.propertyCode;
+                    showModal(code);
+                });
+            });
         }
 
         function renderPagination(totalPages) {
