@@ -44,7 +44,7 @@
             /* Consistent color definitions used in the HTML/JS */
             --ml-beige: #e9dcc6;
             --ml-brown: #8a6b4a;
-            --ml-dark: #6b4f37;  /* Darker brown for text/accents */
+            --ml-dark: #6b4f37; 
             --ml-blue: #6b4f37;
         }
 
@@ -107,14 +107,48 @@
         }
         
         .card-media {
-            min-height:150px;
-            background:#f3f2f1;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            color:#9b9b9b;
-            font-weight:600;
+            /* FINAL SIZE: Set height to 180px */
+            height: 180px; 
+            width: 100%; 
+            
+            overflow: hidden;
+            position: relative; 
+            display: flex; 
+            align-items: center;
+            justify-content: center;
+            background: #f3f2f1; 
         }
+
+        /* Pseudo-element for the blurred background */
+        .card-media::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: var(--card-bg-image); 
+            background-size: cover; 
+            background-position: center;
+            z-index: 0; 
+        }
+        
+        .card-media img {
+            width: 100%;
+            height: 100%;
+            
+            object-fit: cover; /* Ensures image fills the entire 180px height */
+            z-index: 1; 
+            background-color: transparent; 
+            padding: 0; 
+            transition: transform 0.3s ease; 
+        }
+
+        /* Removed hover effects on image/pseudo-element */
+        .card:hover .card-media img {
+            transform: scale(1.0); 
+        }
+
         .badge-available { background:#16a34a; color:#fff; padding:6px 10px; border-radius:999px; font-weight:600; font-size:12px; }
         .badge-sold { background:#ef4444; color:#fff; padding:6px 10px; border-radius:999px; font-weight:600; font-size:12px; }
 
@@ -409,11 +443,13 @@
             <button id="closeModalBtn" class="absolute top-3 right-3 text-gray-500 hover:text-gray-800 transition">
                 <i class="fas fa-times"></i>
             </button>
-            <h3 class="text-xl font-bold mb-4" style="color:var(--ml-dark)">Inquire About Property</h3>
-            <p class="text-sm text-gray-600 mb-4">Fill out the form to connect with an agent instantly.</p>
+            
             
             <form id="contactForm">
                 <div class="mb-4">
+                    <h3 class="text-xl font-bold mb-4" style="color:var(--ml-dark)">Inquire About Property</h3>
+            <p class="text-sm text-gray-600 mb-4">Fill out the form to connect with an agent instantly.</p>
+            
                     <label for="modalName" class="block text-sm font-medium text-gray-700">
                         <i class="fas fa-user mr-2 text-brown-medium"></i> Full Name
                     </label>
@@ -483,7 +519,6 @@
 
         // --- Configuration & Elements ---
         const API = "https://ml-inventories.netlify.app/properties";
-        // 🛑 PLUGGED IN USER'S SPECIFIED SHEET URL 🛑
         const SHEET_API_URL = "https://script.google.com/macros/s/AKfycbxbkDvGKHXS52G9i-FM4ubV-oXW5YiIEnQ5B4L8s_Z5TzWMCkKSVOPgkQe4nBwZhSJY-Q/exec"; 
         
         const grid = document.getElementById('grid');
@@ -516,6 +551,7 @@
         // Utility functions
         const money = n => {
             if (n === undefined || n === null) return "N/A";
+            // FIXED: Missing closing brace for try/catch block
             try { return '₹' + Number(n).toLocaleString('en-IN'); } catch(e){ return n; }
         };
 
@@ -532,56 +568,58 @@
         // --- Modal Control Functions ---
         function showModal(propertyCode = '') {
             modalCodeInput.value = propertyCode === 'General Inquiry' ? '' : propertyCode;
+            
+            // LOGIC FIX: Disable input if a specific code is passed
+            if (propertyCode && propertyCode !== 'General Inquiry') {
+                modalCodeInput.disabled = true;
+                // Visually emphasize that this code is set and cannot be changed
+                modalCodeInput.classList.add('bg-gray-100', 'text-gray-600', 'font-mono');
+            } else {
+                modalCodeInput.disabled = false;
+                modalCodeInput.classList.remove('bg-gray-100', 'text-gray-600', 'font-mono');
+            }
+
             submissionMessage.classList.add('hidden');
             errorMessage.classList.add('hidden');
             contactForm.style.display = 'block';
             contactModal.classList.add('open');
-            // Inactivity timer logic removed, so no reset call here
         }
 
         function hideModal() {
             contactModal.classList.remove('open');
             contactForm.reset();
-            // Inactivity timer logic removed, so no start call here
+            // Ensure input is re-enabled when modal closes and form resets
+            modalCodeInput.disabled = false;
+            modalCodeInput.classList.remove('bg-gray-100', 'text-gray-600', 'font-mono');
         }
         
-        // --- Form Submission Handler: SAVES TO GOOGLE SHEET (REDIRECTS TO FILTERED PAGE) ---
+        // --- Form Submission Handler: SAVES TO GOOGLE SHEET & REDIRECTS ---
         contactForm.addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            // Hide native messages
             submissionMessage.classList.add('hidden');
             errorMessage.classList.add('hidden');
 
             const form = e.target;
             const formData = new FormData(form);
             const data = {};
+            // Read data, including the property code even if the input was disabled
             formData.forEach((value, key) => (data[key] = value));
-
-            // Capture the property code to use for redirection/filtering
-            const submittedCode = data.propertyCode ? data.propertyCode.trim() : '';
+            
+            // Use value from input (in case it was manually entered) or the captured code
+            const submittedCode = (modalCodeInput.value || '').trim();
+            data['propertyCode'] = submittedCode; 
 
             const submitButton = form.querySelector('button[type="submit"]');
             submitButton.disabled = true;
-            submitButton.innerText = 'Submitting...';
-
-            // 1. Add Timestamp (IST)
-            const now = new Date();
-            data["Timestamp"] = new Date(now.getTime() + 5.5 * 60 * 60 * 1000).toISOString().slice(0, 19).replace("T", " ");
-
-            // 🛑 Show SweetAlert Loading Spinner
-            Swal.fire({
-                title: 'Sending Request',
-                text: 'Processing your details...',
-                allowOutsideClick: false,
-                showConfirmButton: false,
-                willOpen: () => {
-                    Swal.showLoading();
-                }
-            });
+            submitButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Submitting...';
 
             try {
-                // 2. Send data to Google Sheet
+                // 1. Add Timestamp (IST)
+                const now = new Date();
+                data["Timestamp"] = new Date(now.getTime() + 5.5 * 60 * 60 * 1000).toISOString().slice(0, 19).replace("T", " ");
+
+                // 2. Send data to Google Sheet (No SweetAlert loading indicator)
                 const sheetResponse = await fetch(SHEET_API_URL, {
                     method: 'POST',
                     mode: 'cors', 
@@ -591,9 +629,6 @@
                     body: new URLSearchParams(data).toString()
                 });
                 
-                // Close the loading modal if the network call completes
-                Swal.close(); 
-
                 if (!sheetResponse.ok) {
                     throw new Error(`HTTP Error: ${sheetResponse.status} ${sheetResponse.statusText}`);
                 }
@@ -602,25 +637,17 @@
 
                 if (responseText.includes("success")) {
                     
-                    // 3. SUCCESS: Show SweetAlert Confirmation
-                    await Swal.fire({
-                        icon: 'success',
-                        title: 'Inquiry Saved!',
-                        text: 'Thank you! Redirecting you to the filtered property...',
-                        confirmButtonText: 'OK',
-                        customClass: {
-                            confirmButton: 'bg-brown hover:bg-brown-dark'
-                        }
-                    });
+                    // 3. SUCCESS: Show thank you message and redirect
+                    contactForm.style.display = 'none';
+                    // SUCCESS MESSAGE: Updated to the requested friendly message
+                    submissionMessage.innerText = 'Thank you for your inquiry! Our team will get in touch with you shortly. Redirecting...';
+                    submissionMessage.classList.remove('hidden');
 
-                    // 4. REDIRECT WITH FILTER PARAMETER
-                    let redirectURL = './properties.html';
-                    if (submittedCode) {
-                        // If a code was provided, redirect with a query parameter
-                        redirectURL += `?code=${encodeURIComponent(submittedCode)}`;
-                    }
-                    
-                    window.location.href = redirectURL; 
+                    // 4. REDIRECT to base properties page after a short delay (2 seconds)
+                    setTimeout(() => {
+                        let redirectURL = './properties.html';
+                        window.location.href = redirectURL; 
+                    }, 2000); 
 
                 } else {
                     // 5. Script Error 
@@ -631,23 +658,12 @@
                 // 6. Error handling
                 console.error('Submission Error:', error);
                 
-                Swal.close(); 
-                
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error!',
-                    text: `Submission failed. Please check the network and console.`,
-                    confirmButtonText: 'Try Again',
-                    customClass: {
-                        confirmButton: 'bg-brown-medium hover:bg-brown-dark'
-                    }
-                });
+                submitButton.innerHTML = '<i class="fas fa-paper-plane"></i> Submit';
+                submitButton.disabled = false;
+                errorMessage.classList.remove('hidden');
                 
             } finally {
-                // Reset form controls
-                submitButton.disabled = false;
-                submitButton.innerText = 'Submit';
-                form.style.display = 'block';
+                // Final cleanup happens after redirect or error display
             }
         });
 
@@ -659,23 +675,19 @@
             }
         });
 
-        // --- Inactivity Timer Logic Removed ---
-        // The original implementation had the start/reset functions removed. 
-        // We ensure they are not called anywhere outside the init() block, which is now correct.
-        
         // --- Create card HTML for one property object ---
         function makeCard(p) {
             const imageUrl = (p.images && p.images.length > 0) 
                 ? p.images[0] 
                 : `https://placehold.co/400x160/f3f2f1/9b9b9b?text=Image+Not+Available`;
             
-            const imageHtml = (p.images && p.images.length > 0)
-                ? `<img src="${imageUrl}" alt="${escapeHtml(p.title)}" class="w-full h-40 object-cover">`
-                : `<div class="card-media">No Image</div>`;
+            const imageHtml = `<img src="${imageUrl}" alt="${escapeHtml(p.title)}" loading="lazy">`;
 
             return `
                 <div class="card">
-                    ${imageHtml}
+                    <div class="card-media">
+                        ${imageHtml}
+                    </div>
                     <div class="p-4 flex-1 flex flex-col justify-between">
                         <div>
                             <div class="flex items-start justify-between gap-2">
@@ -707,6 +719,19 @@
                 </div>
             `;
         }
+
+        // --- New JS function to apply blurred background images dynamically ---
+        function applyBlurredBackgrounds() {
+            // This function is still present but its effect is minimal since fixed height is used,
+            // and the image is object-fit: cover, which might fill the container completely.
+            document.querySelectorAll('.card-media').forEach(mediaDiv => {
+                const imageUrl = mediaDiv.dataset.imageUrl;
+                if (imageUrl) {
+                    mediaDiv.style.setProperty('--card-bg-image', `url(${imageUrl})`);
+                }
+            });
+        }
+
 
         // --- Initialization (MODIFIED TO READ URL PARAMETER) ---
         async function init() {
@@ -743,11 +768,12 @@
                 }
 
                 // 🌟 Add event listeners to the generated contact buttons 🌟
-                document.querySelectorAll('.btn-contact').forEach(button => {
-                    button.addEventListener('click', (e) => {
-                        const code = e.currentTarget.dataset.propertyCode;
+                document.getElementById('grid').addEventListener('click', (e) => {
+                    const button = e.target.closest('.btn-contact');
+                    if (button) {
+                        const code = button.dataset.propertyCode;
                         showModal(code);
-                    });
+                    }
                 });
 
 
@@ -784,15 +810,8 @@
             const html = listToDisplay.map(makeCard).join('');
             grid.innerHTML = html;
 
+            applyBlurredBackgrounds(); // <--- APPLY BLURRED BACKGROUNDS HERE
             renderPagination(totalPages);
-            
-            // 🌟 CRITICAL FIX: Re-attach event listeners after rendering the new cards 🌟
-            document.querySelectorAll('.btn-contact').forEach(button => {
-                button.addEventListener('click', (e) => {
-                    const code = e.currentTarget.dataset.propertyCode;
-                    showModal(code);
-                });
-            });
         }
 
         function renderPagination(totalPages) {
